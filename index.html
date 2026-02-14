@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>رسالة حب ❤️</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial;
+    text-align: center;
+    background: black;
+    color: white;
+}
+
+#hearts {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.heart {
+    position: absolute;
+    color: red;
+    animation: fall 5s linear infinite;
+}
+
+@keyframes fall {
+    0% {transform: translateY(-10px);}
+    100% {transform: translateY(100vh);}
+}
+
+.container {
+    position: relative;
+    top: 30%;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 20px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+#yes { background: green; color: white; }
+#no { background: red; color: white; position: absolute; }
+
+.hidden { display: none; }
+
+input {
+    padding: 10px;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<!-- تشغيل الأغنية -->
+<iframe width="0" height="0" 
+src="https://www.youtube.com/embed/3tmd-ClpJxA?autoplay=1&loop=1" 
+frameborder="0" allow="autoplay"></iframe>
+
+<div id="hearts"></div>
+
+<div class="container" id="page1">
+    <h1>هل بتحبيني؟ ❤️</h1>
+    <button id="yes" onclick="goToLove()">نعم 😍</button>
+    <button id="no">لا 😈</button>
+</div>
+
+<div class="container hidden" id="page2">
+    <h1>كنت بعرف إنك بتحبيني 💖</h1>
+    <button onclick="goBack()">رجوع 🔙</button>
+
+    <h3>في رسالة سرية 🔐</h3>
+    <input type="password" id="code" placeholder="ادخل الرمز">
+    <button onclick="checkCode()">افتح</button>
+
+    <p id="secret" class="hidden">
+    صح بزعلك كثير و ما بعرف ارضيكي كثير و هيك بس صدقيني بحبك و بموت فيكي الله يخليلي ياكي يا حلا و اجمل حد بدنيا كلها ❤️
+    </p>
+</div>
+
+<script>
+// قلوب تمطر
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    document.getElementById("hearts").appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 5000);
+}
+setInterval(createHeart, 300);
+
+// قنبلة كونفتي أول ما تفتح
+window.onload = function() {
+    confetti({
+        particleCount: 200,
+        spread: 120
+    });
+};
+
+// زر لا يهرب
+const noBtn = document.getElementById("no");
+noBtn.addEventListener("mouseover", function() {
+    noBtn.style.top = Math.random() * window.innerHeight + "px";
+    noBtn.style.left = Math.random() * window.innerWidth + "px";
+});
+
+// صفحة نعم
+function goToLove() {
+    document.getElementById("page1").classList.add("hidden");
+    document.getElementById("page2").classList.remove("hidden");
+    confetti({
+        particleCount: 300,
+        spread: 150
+    });
+}
+
+// رجوع
+function goBack() {
+    document.getElementById("page2").classList.add("hidden");
+    document.getElementById("page1").classList.remove("hidden");
+}
+
+// رسالة سرية
+function checkCode() {
+    const code = document.getElementById("code").value;
+    if(code === "1205201") {
+        document.getElementById("secret").classList.remove("hidden");
+    } else {
+        alert("الرمز غلط 😅");
+    }
+}
+</script>
+
+</body>
+</html>
