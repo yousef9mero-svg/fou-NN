@@ -2,145 +2,207 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>رسالة حب ❤️</title>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<title>ليلة حب 🌙</title>
 
 <style>
 body {
     margin: 0;
     overflow: hidden;
-    font-family: Arial;
-    text-align: center;
-    background: black;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #2b1055, #1a0633, #0f0c29);
     color: white;
+    text-align: center;
 }
 
-#hearts {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+/* نجوم */
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    animation: twinkle 2s infinite alternate;
 }
 
+@keyframes twinkle {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+}
+
+/* قلوب */
 .heart {
     position: absolute;
-    color: red;
-    animation: fall 5s linear infinite;
+    color: #ff66cc;
+    animation: fall 8s linear infinite;
 }
 
 @keyframes fall {
-    0% {transform: translateY(-10px);}
-    100% {transform: translateY(100vh);}
+    0% { transform: translateY(-10px); opacity: 1;}
+    100% { transform: translateY(100vh); opacity: 0;}
+}
+
+/* فراشات */
+.butterfly {
+    position: absolute;
+    font-size: 24px;
+    animation: fly 3s ease-out forwards;
+}
+
+@keyframes fly {
+    0% { transform: scale(0) translateY(0); opacity:1; }
+    100% { transform: scale(1.5) translateY(-200px) rotate(360deg); opacity:0; }
 }
 
 .container {
     position: relative;
-    top: 30%;
+    top: 20%;
+    padding: 20px;
 }
 
 button {
-    padding: 15px 30px;
-    font-size: 20px;
+    padding: 12px 28px;
+    font-size: 18px;
     border: none;
-    border-radius: 20px;
+    border-radius: 30px;
     margin: 10px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-#yes { background: green; color: white; }
-#no { background: red; color: white; position: absolute; }
+#yes {
+    background: #d16ba5;
+    color: white;
+    box-shadow: 0 0 20px #d16ba5;
+}
+
+#yes:hover {
+    background: #ff4da6;
+    box-shadow: 0 0 30px #ff4da6;
+}
+
+#no {
+    background: #444;
+    color: white;
+    position: absolute;
+}
 
 .hidden { display: none; }
 
+.loveMessage {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
 input {
-    padding: 10px;
-    font-size: 18px;
+    padding: 8px;
+    border-radius: 20px;
+    border: none;
 }
 </style>
 </head>
 <body>
 
-<!-- تشغيل الأغنية -->
-<iframe width="0" height="0" 
-src="https://www.youtube.com/embed/3tmd-ClpJxA?autoplay=1&loop=1" 
-frameborder="0" allow="autoplay"></iframe>
-
-<div id="hearts"></div>
-
-<div class="container" id="page1">
-    <h1>هل بتحبيني؟ ❤️</h1>
-    <button id="yes" onclick="goToLove()">نعم 😍</button>
+<div id="page1" class="container">
+    <h1>تحت ضو القمر 🌙✨</h1>
+    <h2>هل بتحبيني؟ 💜</h2>
+    <button id="yes" onclick="startLove()">نعم 😍</button>
     <button id="no">لا 😈</button>
 </div>
 
-<div class="container hidden" id="page2">
-    <h1>كنت بعرف إنك بتحبيني 💖</h1>
-    <button onclick="goBack()">رجوع 🔙</button>
+<div id="page2" class="container hidden">
+    <h1>رسائلي إلك 💕</h1>
 
-    <h3>في رسالة سرية 🔐</h3>
-    <input type="password" id="code" placeholder="ادخل الرمز">
-    <button onclick="checkCode()">افتح</button>
+    <div id="loveContainer"></div>
 
-    <p id="secret" class="hidden">
-    صح بزعلك كثير و ما بعرف ارضيكي كثير و هيك بس صدقيني بحبك و بموت فيكي الله يخليلي ياكي يا حلا و اجمل حد بدنيا كلها ❤️
-    </p>
+    <div id="secretSection" class="hidden">
+        <h3>🔐 رسالة سرية</h3>
+        <input type="password" id="code" placeholder="ادخل الرمز">
+        <button onclick="checkCode()">فتح</button>
+
+        <p id="secret" class="hidden">
+        صح بزعلك كثير و ما بعرف ارضيكي كثير و هيك بس صدقيني بحبك و بموت فيكي الله يخليلي ياكي يا حلا و اجمل حد بدنيا كلها 💜
+        </p>
+    </div>
+
+    <button onclick="goBack()">رجوع</button>
 </div>
 
 <script>
-// قلوب تمطر
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 20 + "px";
-    document.getElementById("hearts").appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 5000);
+// نجوم
+for(let i=0; i<100; i++){
+    let star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random()*100 + "vh";
+    star.style.left = Math.random()*100 + "vw";
+    document.body.appendChild(star);
 }
-setInterval(createHeart, 300);
 
-// قنبلة كونفتي أول ما تفتح
-window.onload = function() {
-    confetti({
-        particleCount: 200,
-        spread: 120
-    });
-};
+// قلوب
+function createHeart(){
+    let heart = document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="💜";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(Math.random()*15+15)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),8000);
+}
+setInterval(createHeart,600);
 
 // زر لا يهرب
-const noBtn = document.getElementById("no");
-noBtn.addEventListener("mouseover", function() {
-    noBtn.style.top = Math.random() * window.innerHeight + "px";
-    noBtn.style.left = Math.random() * window.innerWidth + "px";
+let noBtn=document.getElementById("no");
+noBtn.addEventListener("mouseover",()=>{
+    noBtn.style.top=Math.random()*window.innerHeight+"px";
+    noBtn.style.left=Math.random()*window.innerWidth+"px";
 });
 
-// صفحة نعم
-function goToLove() {
+// رسائل حب
+let messages = [
+"أنتِ أجمل شي صار بحياتي 💜",
+"ضحكتك بتخليني أنسى الدنيا كلها 🌙",
+"وجودك جنبي أمان وراحة 💕",
+"بحبك أكثر من أي كلمة ممكن توصف 🌹",
+"إنتِ روحي وقلبي وكل دنيتي ✨"
+];
+
+function startLove(){
     document.getElementById("page1").classList.add("hidden");
     document.getElementById("page2").classList.remove("hidden");
-    confetti({
-        particleCount: 300,
-        spread: 150
+
+    let container = document.getElementById("loveContainer");
+
+    messages.forEach(msg => {
+        let p = document.createElement("p");
+        p.className="loveMessage";
+        p.innerText=msg;
+        container.appendChild(p);
     });
+
+    explodeButterflies();
+    document.getElementById("secretSection").classList.remove("hidden");
 }
 
-// رجوع
-function goBack() {
-    document.getElementById("page2").classList.add("hidden");
-    document.getElementById("page1").classList.remove("hidden");
+// فراشات
+function explodeButterflies(){
+    for(let i=0;i<25;i++){
+        let butterfly=document.createElement("div");
+        butterfly.className="butterfly";
+        butterfly.innerHTML="🦋";
+        butterfly.style.left=window.innerWidth/2+"px";
+        butterfly.style.top=window.innerHeight/2+"px";
+        document.body.appendChild(butterfly);
+        setTimeout(()=>butterfly.remove(),3000);
+    }
 }
 
-// رسالة سرية
-function checkCode() {
-    const code = document.getElementById("code").value;
-    if(code === "1205201") {
+function goBack(){
+    location.reload();
+}
+
+function checkCode(){
+    if(document.getElementById("code").value==="1205201"){
         document.getElementById("secret").classList.remove("hidden");
-    } else {
-        alert("الرمز غلط 😅");
+    }else{
+        alert("الرمز غلط 🌙");
     }
 }
 </script>
